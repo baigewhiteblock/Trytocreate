@@ -12,8 +12,23 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (searchPath.endsWith('json')) {
     isXml = false;
   }
+  const path = CONFIG.root + searchPath;
   const input = document.querySelector('.search-input');
   const resultContent = document.getElementById('search-result');
+
+  const unescapeHtml = html => {
+    return String(html)
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, '\'')
+      .replace(/&#x3A;/g, ':')
+      // Replace all the other &#x; chars
+      .replace(/&#(\d+);/g, (m, p) => {
+        return String.fromCharCode(p);
+      })
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&');
+  };
 
   const getIndexByWord = (word, text, caseSensitive) => {
     if (CONFIG.localsearch.unescape) {
